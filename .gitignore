@@ -1,0 +1,11 @@
+*.ipynb_checkpoints
+*.ipynb
+*.egg-info
+*.pyc
+*~
+*.vscode
+*__pycache__
+repositories/
+build/
+**log/
+log.zip
