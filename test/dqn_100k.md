@@ -1,7 +1,7 @@
 # Breakout-v4 in 100K step
 
 ## DQNs
-![DQNs](figures/dqn_breakout_100k.png)
+![DQNs](figure/dqn_breakout_100k.png)
 
 ## Max Reward 
 | **Algorithm** | Signed Reward | Original Reward |
