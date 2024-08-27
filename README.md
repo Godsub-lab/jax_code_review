@@ -1,34 +1,4 @@
-# Jax-Baseline
-
-Jax-Baseline is a Reinforcement Learning implementation using JAX and Flax/Haiku libraries, mirroring the functionality of standard baselines.
-
-## Features
-- 2-3 times faster than previous Torch and Tensorflow implementations
-- Optimized using JAX's Just-In-Time (JIT) compilation
-- Flexible solution for Gym and Unity ML environments
-
-## Installation
-
-```
-pip install -r requirement.txt
-pip install .
-```
-
-## Implementation Status
-
-- :heavy_check_mark: : Optional implemented
-- :white_check_mark: : Defualt implemented at papers
-- :x: : Not implemeted yet or can not implemented
-- :zzz: : Implemented but didn't update a while (can not guarantee working well now)
-
-### Supported Environments
-
-| **Name**                | **Q-Net based**    | **Actor-Critic based** | **DPG based**      |
-| ----------------------- | ------------------ | ---------------------- | ------------------ |
-| Gymnasium               | :heavy_check_mark: | :heavy_check_mark:     | :heavy_check_mark: |
-| MultiworkerGym with Ray | :heavy_check_mark: | :heavy_check_mark:     | :heavy_check_mark: |
-| Unity-ML Environments   | :zzz:              | :zzz:                  | :zzz:              |
-
+######
 
 
 [^DQN]: [DQN](https://arxiv.org/abs/1312.5602v1)
