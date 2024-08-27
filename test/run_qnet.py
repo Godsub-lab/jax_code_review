@@ -8,16 +8,7 @@ sys.path.append('/content/jax_code_review/model_builder')
 
 import gymnasium as gym
 
-from jax_baselines.BBF.bbf import BBF
-from jax_baselines.BBF.hl_gauss_bbf import HL_GAUSS_BBF
-from jax_baselines.C51.c51 import C51
-from jax_baselines.C51.hl_gauss_c51 import HL_GAUSS_C51
-from jax_baselines.DQN.dqn import DQN
-from jax_baselines.FQF.fqf import FQF
-from jax_baselines.IQN.iqn import IQN
-from jax_baselines.QRDQN.qrdqn import QRDQN
-from jax_baselines.SPR.hl_gauss_spr import HL_GAUSS_SPR
-from jax_baselines.SPR.spr import SPR
+from jaxsm_baselines.DQN.dqn import DQN
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -98,11 +89,11 @@ if __name__ == "__main__":
         env_type = "unity"
     else:
         if args.worker > 1:
-            from jax_baselines.common.worker import gymnasium as gymMultiworker
+            from jaxsm_baselines.common.worker import gymnasium as gymMultiworker
 
             env = gymMultiworker(env_name, worker_num=args.worker)
         else:
-            from jax_baselines.common.atari_wrappers import (
+            from jaxsm_baselines.common.atari_wrappers import (
                 get_env_type,
                 make_wrap_atari,
             )
@@ -119,8 +110,6 @@ if __name__ == "__main__":
     if args.algo == "DQN":
         if args.model_lib == "flax":
             from model_builder.flax.qnet.dqn_builder import model_builder_maker
-        elif args.model_lib == "haiku":
-            from model_builder.haiku.qnet.dqn_builder import model_builder_maker
         agent = DQN(
             env,
             model_builder_maker=model_builder_maker,
@@ -145,259 +134,6 @@ if __name__ == "__main__":
             optimizer=args.optimizer,
             compress_memory=args.compress_memory,
         )
-    elif args.algo == "C51":
-        if args.model_lib == "flax":
-            from model_builder.flax.qnet.c51_builder import model_builder_maker
-        elif args.model_lib == "haiku":
-            from model_builder.haiku.qnet.c51_builder import model_builder_maker
-
-        if args.hl_gauss:
-            agent = HL_GAUSS_C51(
-                env,
-                model_builder_maker=model_builder_maker,
-                gamma=args.gamma,
-                learning_rate=args.learning_rate,
-                batch_size=args.batch,
-                buffer_size=int(args.buffer_size),
-                target_network_update_freq=args.target_update,
-                prioritized_replay=args.per,
-                double_q=args.double,
-                dueling_model=args.dueling,
-                exploration_final_eps=args.final_eps,
-                param_noise=args.noisynet,
-                n_step=args.n_step,
-                munchausen=args.munchausen,
-                gradient_steps=args.gradient_steps,
-                train_freq=args.train_freq,
-                learning_starts=args.learning_starts,
-                categorial_max=args.max,
-                categorial_min=args.min,
-                exploration_fraction=args.exploration_fraction,
-                tensorboard_log=args.logdir + env_type + "/" + env_name,
-                policy_kwargs=policy_kwargs,
-                optimizer=args.optimizer,
-                compress_memory=args.compress_memory,
-            )
-        else:
-            agent = C51(
-                env,
-                model_builder_maker=model_builder_maker,
-                gamma=args.gamma,
-                learning_rate=args.learning_rate,
-                batch_size=args.batch,
-                buffer_size=int(args.buffer_size),
-                target_network_update_freq=args.target_update,
-                prioritized_replay=args.per,
-                double_q=args.double,
-                dueling_model=args.dueling,
-                exploration_final_eps=args.final_eps,
-                param_noise=args.noisynet,
-                n_step=args.n_step,
-                munchausen=args.munchausen,
-                gradient_steps=args.gradient_steps,
-                train_freq=args.train_freq,
-                learning_starts=args.learning_starts,
-                categorial_max=args.max,
-                categorial_min=args.min,
-                exploration_fraction=args.exploration_fraction,
-                tensorboard_log=args.logdir + env_type + "/" + env_name,
-                policy_kwargs=policy_kwargs,
-                optimizer=args.optimizer,
-                compress_memory=args.compress_memory,
-            )
-    elif args.algo == "QRDQN":
-        if args.model_lib == "flax":
-            from model_builder.flax.qnet.qrdqn_builder import model_builder_maker
-        elif args.model_lib == "haiku":
-            from model_builder.haiku.qnet.qrdqn_builder import model_builder_maker
-        agent = QRDQN(
-            env,
-            model_builder_maker=model_builder_maker,
-            gamma=args.gamma,
-            learning_rate=args.learning_rate,
-            batch_size=args.batch,
-            buffer_size=int(args.buffer_size),
-            target_network_update_freq=args.target_update,
-            prioritized_replay=args.per,
-            double_q=args.double,
-            dueling_model=args.dueling,
-            exploration_final_eps=args.final_eps,
-            param_noise=args.noisynet,
-            n_step=args.n_step,
-            munchausen=args.munchausen,
-            gradient_steps=args.gradient_steps,
-            train_freq=args.train_freq,
-            learning_starts=args.learning_starts,
-            delta=args.delta,
-            n_support=args.n_support,
-            exploration_fraction=args.exploration_fraction,
-            tensorboard_log=args.logdir + env_type + "/" + env_name,
-            policy_kwargs=policy_kwargs,
-            optimizer=args.optimizer,
-            compress_memory=args.compress_memory,
-        )
-    elif args.algo == "IQN":
-        if args.model_lib == "flax":
-            from model_builder.flax.qnet.iqn_builder import model_builder_maker
-        elif args.model_lib == "haiku":
-            from model_builder.haiku.qnet.iqn_builder import model_builder_maker
-        agent = IQN(
-            env,
-            model_builder_maker=model_builder_maker,
-            gamma=args.gamma,
-            learning_rate=args.learning_rate,
-            batch_size=args.batch,
-            buffer_size=int(args.buffer_size),
-            target_network_update_freq=args.target_update,
-            prioritized_replay=args.per,
-            double_q=args.double,
-            dueling_model=args.dueling,
-            exploration_final_eps=args.final_eps,
-            param_noise=args.noisynet,
-            n_step=args.n_step,
-            munchausen=args.munchausen,
-            gradient_steps=args.gradient_steps,
-            train_freq=args.train_freq,
-            learning_starts=args.learning_starts,
-            delta=args.delta,
-            n_support=args.n_support,
-            exploration_fraction=args.exploration_fraction,
-            CVaR=args.CVaR,
-            tensorboard_log=args.logdir + env_type + "/" + env_name,
-            policy_kwargs=policy_kwargs,
-            optimizer=args.optimizer,
-            compress_memory=args.compress_memory,
-        )
-    elif args.algo == "FQF":
-        if args.model_lib == "flax":
-            from model_builder.flax.qnet.fqf_builder import model_builder_maker
-        elif args.model_lib == "haiku":
-            from model_builder.haiku.qnet.fqf_builder import model_builder_maker
-        agent = FQF(
-            env,
-            model_builder_maker=model_builder_maker,
-            gamma=args.gamma,
-            learning_rate=args.learning_rate,
-            batch_size=args.batch,
-            buffer_size=int(args.buffer_size),
-            target_network_update_freq=args.target_update,
-            prioritized_replay=args.per,
-            double_q=args.double,
-            dueling_model=args.dueling,
-            exploration_final_eps=args.final_eps,
-            param_noise=args.noisynet,
-            n_step=args.n_step,
-            munchausen=args.munchausen,
-            gradient_steps=args.gradient_steps,
-            train_freq=args.train_freq,
-            learning_starts=args.learning_starts,
-            delta=args.delta,
-            n_support=args.n_support,
-            exploration_fraction=args.exploration_fraction,
-            tensorboard_log=args.logdir + env_type + "/" + env_name,
-            policy_kwargs=policy_kwargs,
-            optimizer=args.optimizer,
-            compress_memory=args.compress_memory,
-        )
-    elif args.algo == "SPR":
-        if args.model_lib == "flax":
-            from model_builder.flax.qnet.spr_builder import model_builder_maker
-        elif args.model_lib == "haiku":
-            from model_builder.haiku.qnet.spr_builder import model_builder_maker
-
-        if args.hl_gauss:
-            agent = HL_GAUSS_SPR(
-                env,
-                model_builder_maker=model_builder_maker,
-                gamma=args.gamma,
-                learning_rate=args.learning_rate,
-                batch_size=args.batch,
-                buffer_size=int(args.buffer_size),
-                off_policy_fix=args.off_policy_fix,
-                soft_reset=args.soft_reset,
-                munchausen=args.munchausen,
-                gradient_steps=args.gradient_steps,
-                learning_starts=args.learning_starts,
-                categorial_max=args.max,
-                categorial_min=args.min,
-                tensorboard_log=args.logdir + env_type + "/" + env_name,
-                policy_kwargs=policy_kwargs,
-                optimizer=args.optimizer,
-                compress_memory=args.compress_memory,
-            )
-        else:
-            agent = SPR(
-                env,
-                model_builder_maker=model_builder_maker,
-                gamma=args.gamma,
-                learning_rate=args.learning_rate,
-                batch_size=args.batch,
-                buffer_size=int(args.buffer_size),
-                off_policy_fix=args.off_policy_fix,
-                soft_reset=args.soft_reset,
-                munchausen=args.munchausen,
-                gradient_steps=args.gradient_steps,
-                learning_starts=args.learning_starts,
-                categorial_max=args.max,
-                categorial_min=args.min,
-                tensorboard_log=args.logdir + env_type + "/" + env_name,
-                policy_kwargs=policy_kwargs,
-                optimizer=args.optimizer,
-                compress_memory=args.compress_memory,
-            )
-
-    elif args.algo == "BBF":
-        if args.model_lib == "flax":
-            from model_builder.flax.qnet.bbf_builder import model_builder_maker
-        elif args.model_lib == "haiku":
-            raise NotImplementedError
-
-        if args.hl_gauss:
-            agent = HL_GAUSS_BBF(
-                env,
-                model_builder_maker=model_builder_maker,
-                gamma=args.gamma,
-                learning_rate=args.learning_rate,
-                batch_size=args.batch,
-                buffer_size=int(args.buffer_size),
-                exploration_final_eps=args.final_eps,
-                param_noise=args.noisynet,
-                off_policy_fix=args.off_policy_fix,
-                munchausen=args.munchausen,
-                gradient_steps=args.gradient_steps,
-                train_freq=args.train_freq,
-                learning_starts=args.learning_starts,
-                categorial_max=args.max,
-                categorial_min=args.min,
-                exploration_fraction=args.exploration_fraction,
-                tensorboard_log=args.logdir + env_type + "/" + env_name,
-                policy_kwargs=policy_kwargs,
-                optimizer=args.optimizer,
-                compress_memory=args.compress_memory,
-            )
-        else:
-            agent = BBF(
-                env,
-                model_builder_maker=model_builder_maker,
-                gamma=args.gamma,
-                learning_rate=args.learning_rate,
-                batch_size=args.batch,
-                buffer_size=int(args.buffer_size),
-                exploration_final_eps=args.final_eps,
-                param_noise=args.noisynet,
-                off_policy_fix=args.off_policy_fix,
-                munchausen=args.munchausen,
-                gradient_steps=args.gradient_steps,
-                train_freq=args.train_freq,
-                learning_starts=args.learning_starts,
-                categorial_max=args.max,
-                categorial_min=args.min,
-                exploration_fraction=args.exploration_fraction,
-                tensorboard_log=args.logdir + env_type + "/" + env_name,
-                policy_kwargs=policy_kwargs,
-                optimizer=args.optimizer,
-                compress_memory=args.compress_memory,
-            )
 
     agent.learn(int(args.steps))
 
