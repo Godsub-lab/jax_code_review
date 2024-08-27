@@ -5,18 +5,13 @@ import numpy as np
 from mlagents_envs.environment import ActionTuple, UnityEnvironment
 from tqdm.auto import trange
 
-from jax_baselines.common.base_classes import (
+from jaxsm_baselines.common.base_classes import (
     TensorboardWriter,
     restore,
     save,
     select_optimizer,
 )
-from jax_baselines.common.cpprb_buffers import (
-    NstepReplayBuffer,
-    PrioritizedNstepReplayBuffer,
-    PrioritizedReplayBuffer,
-    ReplayBuffer,
-)
+
 from jax_baselines.common.utils import add_hparams, convert_states, key_gen
 from jax_baselines.common.worker import gymMultiworker
 
